@@ -15,20 +15,20 @@ final class RMRequest {
     // Query parametrs
 
     ///API constant
-    private struct Constant {
+    private struct Constants {
         static let baseUrl = "https://rickandmortyapi.com/api"
         
     }
     /// Desired endpoint
    private let endpoint: RMEndpoint
 /// path component for api, if any
-   private let pathComponents: Set<String>
+   private let pathComponents: [String]
   ///query argumnts for api, if any
-   private let queryParameter: [URLQueryItem]
+   private let queryParameters: [URLQueryItem]
     
     /// constructed url teh api request in string format
     private var urlString : String{
-        var string = Constant.baseUrl
+        var string = Constants.baseUrl
         string += "/"
         string += endpoint.rawValue
         
@@ -38,11 +38,11 @@ final class RMRequest {
             })
         }
         
-        if !queryParameter.isEmpty{
+        if !queryParameters.isEmpty{
             
             string += "?"
             // name =value
-            let argumentString = queryParameter.compactMap({
+            let argumentString = queryParameters.compactMap({
                 guard let value = $0.value else {return nil}
                 return "\($0.name)=\(value)"
             }).joined(separator: "&")
@@ -52,11 +52,11 @@ final class RMRequest {
         return string
     }
     /// computed  & constructed API url
-   public var url : URL?{
+   public var url : URL? {
         return URL(string: urlString)
     }
     ///Desired http method
-    public let httpMethods = "GET"
+    public let httpMethod = "GET"
      
     //Mark: - public
      
@@ -65,10 +65,10 @@ final class RMRequest {
     ///    - endpoint  : target endpoint
     ///    - pathComponent  : Colletion of query parameter
     ///    - queryParamert : Collection of query parameter
-    public init(endpoint: RMEndpoint,pathComponents :Set<String>=[],queryParameter :[URLQueryItem]=[] ){
+    public init(endpoint: RMEndpoint,pathComponents :[String]=[],queryParameters :[URLQueryItem]=[] ){
         self.endpoint = endpoint
         self.pathComponents = pathComponents
-        self.queryParameter =  queryParameter
+        self.queryParameters = queryParameters
         
     }
     
@@ -76,4 +76,9 @@ final class RMRequest {
     
     
     
+}
+
+
+extension RMRequest{
+    static let listCharactersRequests = RMRequest(endpoint: .character)
 }
